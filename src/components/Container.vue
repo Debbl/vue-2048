@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { Tile, Block } from "../types";
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { WIDTH, HEIGHT } from "../constants/constans";
 
 // 位置方向
@@ -17,7 +17,7 @@ function getDirections() {
 }
 const directions = getDirections();
 
-const blockBgColors: Record<Tile, any> = {
+const blockBgColors: Record<Tile, string> = {
   "0": "tile",
   "2": "tile-2",
   "4": "tile-4",
@@ -38,18 +38,23 @@ const board = ref<Block[][]>(
   )
 );
 
-function init(board: Block[][]) {
-  function randomRange() {
-    const x = Math.floor(Math.random() * 4);
-    const y = Math.floor(Math.random() * 4);
-    return [x, y];
+function randomRange() {
+  const x = Math.floor(Math.random() * 4);
+  const y = Math.floor(Math.random() * 4);
+  return [x, y];
+}
+
+const randomBuildBlock = () => {
+  let [x, y] = randomRange();
+  while (board.value[y][x].value !== "0") {
+    [x, y] = randomRange();
   }
+  board.value[y][x].value = Math.random() < 0.8 ? "2" : "4";
+};
+
+function init(board: Block[][]) {
   Array.from({ length: 2 }).map(() => {
-    let [x, y] = randomRange();
-    while (board[y][x].value !== "0") {
-      [x, y] = randomRange();
-    }
-    board[y][x].value = Math.random() < 0.8 ? "2" : "4";
+    randomBuildBlock();
   });
 }
 
@@ -58,6 +63,143 @@ init(board.value);
 const getBlockClass = (block: Block) => {
   return blockBgColors[block.value] + " " + directions[`${block.y}-${block.x}`];
 };
+
+// 移动
+enum Direction {
+  UP,
+  RIGHT,
+  DOWN,
+  LEFT,
+}
+
+const move = (direction: Direction) => {
+  let flag = false;
+  switch (direction) {
+    case Direction.UP:
+      for (let i = 0; i < WIDTH; i++) {
+        for (let j = 1; j < WIDTH; j++) {
+          for (let k = j; k > 0; k--) {
+            const tile = board.value[k][i];
+            const beforeTile = board.value[k - 1][i];
+            if (tile.value !== "0") {
+              if (beforeTile.value === "0") {
+                board.value[k - 1][i].value = tile.value;
+                board.value[k][i].value = "0";
+                flag = true;
+              } else if (beforeTile.value === tile.value) {
+                board.value[k - 1][i].value = String(+tile.value * 2) as Tile;
+                board.value[k][i].value = "0";
+                flag = true;
+              }
+            }
+          }
+        }
+      }
+      break;
+    case Direction.RIGHT:
+      for (let i = 0; i < WIDTH; i++) {
+        for (let j = 2; j >= 0; j--) {
+          for (let k = j; k < WIDTH - 1; k++) {
+            const posY = i;
+            const posX = k;
+            const tile = board.value[posY][posX];
+            const beforeTile = board.value[posY][posX + 1];
+            if (tile.value !== "0") {
+              if (beforeTile.value === "0") {
+                board.value[posY][posX + 1].value = tile.value;
+                board.value[posY][posX].value = "0";
+                flag = true;
+              } else if (beforeTile.value === tile.value) {
+                board.value[posY][posX + 1].value = String(
+                  +tile.value * 2
+                ) as Tile;
+                board.value[posY][posX].value = "0";
+                flag = true;
+              }
+            }
+          }
+        }
+      }
+      break;
+    case Direction.DOWN:
+      for (let i = 0; i < WIDTH; i++) {
+        for (let j = 2; j >= 0; j--) {
+          for (let k = j; k < WIDTH - 1; k++) {
+            const posY = k;
+            const posX = i;
+            const tile = board.value[posY][posX];
+            const beforeTile = board.value[posY + 1][posX];
+            if (tile.value !== "0") {
+              if (beforeTile.value === "0") {
+                board.value[posY + 1][posX].value = tile.value;
+                board.value[posY][posX].value = "0";
+                flag = true;
+              } else if (beforeTile.value === tile.value) {
+                board.value[posY + 1][posX].value = String(
+                  +tile.value * 2
+                ) as Tile;
+                board.value[posY][posX].value = "0";
+                flag = true;
+              }
+            }
+          }
+        }
+      }
+      break;
+    case Direction.LEFT:
+      for (let i = 0; i < WIDTH; i++) {
+        for (let j = 1; j < WIDTH; j++) {
+          for (let k = j; k > 0; k--) {
+            const posY = i;
+            const posX = k;
+            const tile = board.value[posY][posX];
+            const beforeTile = board.value[posY][posX - 1];
+            if (tile.value !== "0") {
+              if (beforeTile.value === "0") {
+                board.value[posY][posX - 1].value = tile.value;
+                board.value[posY][posX].value = "0";
+                flag = true;
+              } else if (beforeTile.value === tile.value) {
+                board.value[posY][posX - 1].value = String(
+                  +tile.value * 2
+                ) as Tile;
+                board.value[posY][posX].value = "0";
+                flag = true;
+              }
+            }
+          }
+        }
+      }
+      break;
+    default:
+      throw "ERROR";
+  }
+  if (flag) {
+    randomBuildBlock();
+    flag = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", (e: KeyboardEvent) => {
+    switch (e.code) {
+      case "ArrowUp":
+        move(Direction.UP);
+        break;
+      case "ArrowRight":
+        move(Direction.RIGHT);
+        break;
+      case "ArrowDown":
+        move(Direction.DOWN);
+        break;
+      case "ArrowLeft":
+        move(Direction.LEFT);
+        break;
+      default:
+        throw e.code;
+    }
+  });
+});
 </script>
 
 <template>
