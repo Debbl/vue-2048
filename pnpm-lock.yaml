@@ -5,6 +5,7 @@ specifiers:
   '@iconify-json/mdi': ^1.1.33
   '@unocss/preset-attributify': ^0.45.23
   '@unocss/preset-uno': ^0.45.23
+  '@unocss/reset': ^0.45.25
   '@unocss/vite': ^0.45.23
   '@vitejs/plugin-vue': ^3.1.0
   '@vueuse/core': ^9.3.0
@@ -23,6 +24,7 @@ devDependencies:
   '@iconify-json/mdi': 1.1.33
   '@unocss/preset-attributify': 0.45.23
   '@unocss/preset-uno': 0.45.23
+  '@unocss/reset': 0.45.25
   '@unocss/vite': 0.45.23_vite@3.1.3
   '@vitejs/plugin-vue': 3.1.0_vite@3.1.3+vue@3.2.39
   typescript: 4.8.3
@@ -299,6 +301,10 @@ packages:
 
   /@unocss/reset/0.45.23:
     resolution: {integrity: sha512-4CGKtMhMFgzuJ1AOcRx9/W6kj1OMRvPPxletkhKr8FjsNVNStCihRGGryo/dZPAS7YUg/YDUY7PdyHAzDJcQkg==}
+    dev: true
+
+  /@unocss/reset/0.45.25:
+    resolution: {integrity: sha512-ab4sP4ybikPq6eje66SIgL/KAkrx6pjx03KFlziHGdfnXpNxTYP5RCXXw5rcVX778NyV6Lk0VyidC8jRp4XtTQ==}
     dev: true
 
   /@unocss/scope/0.45.23:
