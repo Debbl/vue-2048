@@ -10,7 +10,7 @@ function getDirections() {
   const directions: Record<string, string> = {};
   for (let i = 0; i < top.length; i++) {
     for (let j = 0; j < left.length; j++) {
-      directions[`${i + 1}-${j + 1}`] = `${top[i]} ${left[j]}`;
+      directions[`${i}-${j}`] = `${top[i]} ${left[j]}`;
     }
   }
   return directions;
@@ -18,26 +18,23 @@ function getDirections() {
 const directions = getDirections();
 
 const blockBgColors: Record<Tile, any> = {
-  "0": "bg-[#eee4da59]",
-  "2": "bg-[#eee4da]",
-  "4": "bg-[#ede0c8]",
-  "8": "bg-[#f2b179]",
-  "16": "bg-[#f59563]",
-  "32": "bg-white",
-  "64": "bg-red",
-  "128": "bg-green",
-  "256": "bg-blue",
-  "512": "bg-white",
-  "1024": "bg-white",
-  "2048": "bg-white",
+  "0": "tile",
+  "2": "tile-2",
+  "4": "tile-4",
+  "8": "tile-8",
+  "16": "tile-16",
+  "32": "tile-32",
+  "64": "tile-64",
+  "128": "tile-128",
+  "256": "tile-256",
+  "512": "tile-512",
+  "1024": "tile-1024",
+  "2048": "tile-2048",
 };
 
 const board = ref<Block[][]>(
   Array.from({ length: HEIGHT }, (_, y) => y).map((y) =>
-    Array.from(
-      { length: WIDTH },
-      (_, x): Block => ({ x: x + 1, y: y + 1, value: "0" })
-    )
+    Array.from({ length: WIDTH }, (_, x): Block => ({ x, y, value: "0" }))
   )
 );
 
