@@ -1,6 +1,13 @@
 # Vue 2048 
 > 参考 https://github.com/gabrielecirulli/2048
 
+# 技术栈
+- Vue3
+- TypeScript
+- Vite
+- UnoCSS
+- VueUse
+
 # 思路
 ## 布局
 - container 是 relative,动态生成 absolute button 元素，添加 left 和 top
