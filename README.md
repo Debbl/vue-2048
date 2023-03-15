@@ -1,4 +1,4 @@
-# Vue 2048 
+# [Vue 2048](https://game.aiwan.run/2048/) 
 > 参考 https://github.com/gabrielecirulli/2048
 
 # 技术栈
