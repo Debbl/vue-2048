@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { Tile, Block } from "../types";
 import { onMounted, ref, watch } from "vue";
-import { WIDTH, HEIGHT } from "../constants/constans";
+import type { Block, Tile } from "../types";
+import { HEIGHT, WIDTH } from "../constants/constans";
 
 // 位置方向
 const top = ["top-2", "top-20", "top-38", "top-56"];
@@ -52,16 +52,15 @@ const randomBuildBlock = () => {
   board.value[y][x].value = Math.random() < 0.8 ? "2" : "4";
 };
 
-function init(board: Block[][]) {
-  Array.from({ length: 2 }).map(() => {
-    randomBuildBlock();
-  });
+function init() {
+  randomBuildBlock();
+  randomBuildBlock();
 }
 
-init(board.value);
+init();
 
 const getBlockClass = (block: Block) => {
-  return blockBgColors[block.value] + " " + directions[`${block.y}-${block.x}`];
+  return `${blockBgColors[block.value]} ${directions[`${block.y}-${block.x}`]}`;
 };
 
 // 移动
@@ -172,7 +171,7 @@ const move = (direction: Direction) => {
       }
       break;
     default:
-      throw "ERROR";
+      throw new Error("ERROR");
   }
   if (flag) {
     randomBuildBlock();
@@ -215,8 +214,8 @@ onMounted(() => {
     rounded
     relative
   >
-    <template v-for="rows in board">
-      <template v-for="block in rows">
+    <template v-for="rows in board" :key="rows">
+      <template v-for="block in rows" :key="block">
         <button w-16 h-16 rounded class="bg-[#eee4da59]"></button>
         <template v-if="block.value !== '0'">
           <button absolute w-16 h-16 rounded :class="getBlockClass(block)">
