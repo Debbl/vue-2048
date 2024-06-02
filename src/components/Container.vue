@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import type { Block, Tile } from "../types";
 import { HEIGHT, WIDTH } from "../constants/constans";
 
@@ -34,8 +34,8 @@ const blockBgColors: Record<Tile, string> = {
 
 const board = ref<Block[][]>(
   Array.from({ length: HEIGHT }, (_, y) => y).map((y) =>
-    Array.from({ length: WIDTH }, (_, x): Block => ({ x, y, value: "0" }))
-  )
+    Array.from({ length: WIDTH }, (_, x): Block => ({ x, y, value: "0" })),
+  ),
 );
 
 function randomRange() {
@@ -110,7 +110,7 @@ const move = (direction: Direction) => {
                 flag = true;
               } else if (beforeTile.value === tile.value) {
                 board.value[posY][posX + 1].value = String(
-                  +tile.value * 2
+                  +tile.value * 2,
                 ) as Tile;
                 board.value[posY][posX].value = "0";
                 flag = true;
@@ -135,7 +135,7 @@ const move = (direction: Direction) => {
                 flag = true;
               } else if (beforeTile.value === tile.value) {
                 board.value[posY + 1][posX].value = String(
-                  +tile.value * 2
+                  +tile.value * 2,
                 ) as Tile;
                 board.value[posY][posX].value = "0";
                 flag = true;
@@ -160,7 +160,7 @@ const move = (direction: Direction) => {
                 flag = true;
               } else if (beforeTile.value === tile.value) {
                 board.value[posY][posX - 1].value = String(
-                  +tile.value * 2
+                  +tile.value * 2,
                 ) as Tile;
                 board.value[posY][posX].value = "0";
                 flag = true;
@@ -204,21 +204,21 @@ onMounted(() => {
 <template>
   <div
     class="bg-[#bbada0]"
-    dark:opacity-40
-    inline-flex
+    relative
     w-74
+    inline-flex
     flex-wrap
     justify-evenly
-    p-y-2
     gap-y-2
     rounded
-    relative
+    p-y-2
+    dark:opacity-40
   >
     <template v-for="rows in board" :key="rows">
       <template v-for="block in rows" :key="block">
-        <button w-16 h-16 rounded class="bg-[#eee4da59]"></button>
+        <button h-16 w-16 rounded class="bg-[#eee4da59]"></button>
         <template v-if="block.value !== '0'">
-          <button absolute w-16 h-16 rounded :class="getBlockClass(block)">
+          <button absolute h-16 w-16 rounded :class="getBlockClass(block)">
             {{ block.value }}
           </button>
         </template>

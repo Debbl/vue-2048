@@ -3,7 +3,7 @@ import { isDark, toggleDark } from "../composables/dark";
 </script>
 
 <template>
-  <nav text-xl mt-6 flex gap-2 justify-center>
+  <nav mt-6 flex justify-center gap-2 text-xl>
     <button class="icon-btn" @click="toggleDark()">
       <div v-if="isDark" i-carbon-moon />
       <div v-else i-carbon-sun />
